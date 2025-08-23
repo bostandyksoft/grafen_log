@@ -33,7 +33,7 @@ public class PersistentConfig {
     @Bean
     public SpringLiquibase liquibase() {
         SpringLiquibase liquibase = new SpringLiquibase();
-        liquibase.setChangeLog("classpath:config/liquibase/master.xml");
+        liquibase.setChangeLog("classpath:liquibase/master.xml");
         liquibase.setDataSource(dataSource());
         liquibase.setDefaultSchema(settings.getDatabaseSchema());
         return liquibase;
@@ -65,8 +65,6 @@ public class PersistentConfig {
         properties.put(HibernateHints.HINT_FLUSH_MODE, FlushMode.COMMIT);
         properties.put("spring.jpa.hibernate.ddl-auto", "update");
         properties.put("spring.jpa.generate-ddl", false);
-
-        properties.put("hibernate.query.mutation_strategy", "org.hibernate.hql.spi.id.inline.InlineMutationStrategy");
 
         return properties;
     }

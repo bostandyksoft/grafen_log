@@ -198,12 +198,10 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="title" type="varchar(1000)" remarks="Название предмета">
-                <constraints nullable="false" notNullConstraintName="nn_subject_01" unique="true"
-                             uniqueConstraintName="subject_uniq"/>
+                <constraints nullable="false" notNullConstraintName="nn_exercise_01"/>
             </column>
             <column name="comment" type="varchar(1000)" remarks="Дополнительный комментарий">
-                <constraints nullable="false" notNullConstraintName="nn_subject_02" unique="true"
-                             uniqueConstraintName="subject_uniq"/>
+                <constraints nullable="false" notNullConstraintName="nn_exercise_02"/>
             </column>
         </createTable>
     </changeSet>
@@ -225,7 +223,7 @@
             <column name="href" type="varchar(4000)" remarks="Ссылка">
                 <constraints nullable="false" notNullConstraintName="nn_attachment_02"/>
             </column>
-            <column name="exercise_id">
+            <column name="exercise_id" type="number">
                 <constraints nullable="false" notNullConstraintName="nn_attachment_03"
                              referencedTableName="exercise" referencedColumnNames="id"
                              foreignKeyName="fk_attachment_exercise" deleteCascade="true"/>
