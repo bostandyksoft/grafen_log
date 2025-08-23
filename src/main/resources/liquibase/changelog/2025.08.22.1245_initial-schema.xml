@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="2025.08.22.1245 init (1)" author="avmakarov">
+        <preConditions>
+            <not>
+                <sequenceExists sequenceName="global_seq"/>
+            </not>
+        </preConditions>
+        <createSequence sequenceName="global_seq" incrementBy="1" minValue="0"/>
+    </changeSet>
+
+    <changeSet id="2025.08.22.1245 init (1.5)" author="avmakarov">
+        <preConditions>
+            <not>
+                <tableExists tableName="person"/>
+            </not>
+        </preConditions>
+        <createTable tableName="person" remarks="Карточка личной информации о человеке">
+            <column name="id" type="number">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="full_name" type="varchar(100)" remarks="ФИО">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2025.08.22.1245 init (1.6)" author="avmakarov">
+        <preConditions>
+            <not>
+                <tableExists tableName="user"/>
+            </not>
+        </preConditions>
+        <createTable tableName="user" remarks="Карточка аутентификационной информации">
+            <column name="id" type="number">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="login" type="varchar(100)" remarks="Логин/Email">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="varchar(1000)" remarks="Пароль">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2025.08.22.1245 init (2)" author="avmakarov">
+        <preConditions>
+            <not>
+                <tableExists tableName="class"/>
+            </not>
+        </preConditions>
+        <createTable tableName="class" remarks="Учебный класс">
+            <column name="id" type="number">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2025.08.22.1245 init (3)" author="avmakarov">
+        <preConditions>
+            <and>
+                <tableExists tableName="class"/>
+                <not>
+                    <tableExists tableName="student"/>
+                </not>
+            </and>
+        </preConditions>
+        <createTable tableName="student" remarks="Ученик">
+            <column name="id" type="number">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="person_id" type="number">
+                <constraints nullable="false"/>
+            </column>
+            <column name="class_id" type="number">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2025.08.22.1245 init (4)" author="avmakarov">
+        <preConditions>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_student_class"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint
+                baseTableName="student"
+                baseColumnNames="class_id"
+                referencedTableName="class"
+                referencedColumnNames="id"
+                constraintName="fk_student_class"
+                onDelete="SET NULL"
+                onUpdate="RESTRICT"/>
+    </changeSet>
+
+    <changeSet id="2025.08.22.1245 init (5)" author="avmakarov">
+        <preConditions>
+            <tableExists tableName="person"/>
+            <tableExists tableName="student"/>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_student_person"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint
+                baseTableName="student"
+                baseColumnNames="person_id"
+                referencedTableName="person"
+                referencedColumnNames="id"
+                constraintName="fk_student_person"
+                onDelete="CASCADE"
+                onUpdate="RESTRICT"/>
+    </changeSet>
+
+    <changeSet id="2025.08.22.1245 init (6)" author="avmakarov">
+        <preConditions>
+            <not>
+                <tableExists tableName="teacher"/>
+            </not>
+        </preConditions>
+        <createTable tableName="teacher" remarks="Учитель">
+            <column name="id" type="number">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="person_id" type="number">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2025.08.22.1245 init (7)" author="avmakarov">
+        <preConditions>
+            <tableExists tableName="person"/>
+            <tableExists tableName="teacher"/>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_teacher_person"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint
+                baseTableName="teacher"
+                baseColumnNames="person_id"
+                referencedTableName="person"
+                referencedColumnNames="id"
+                constraintName="fk_teacher_person"
+                onDelete="CASCADE"
+                onUpdate="RESTRICT"/>
+    </changeSet>
+
+    <changeSet id="2025.08.22.1245 init (8)" author="avmakarov">
+        <preConditions>
+            <not>
+                <tableExists tableName="subject"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="subject">
+            <column name="id" type="number">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(1000)" remarks="Название предмета">
+                <constraints nullable="false" notNullConstraintName="nn_subject_01" unique="true"
+                             uniqueConstraintName="subject_uniq"/>
+            </column>
+            <column name="comment" type="varchar(1000)" remarks="Дополнительный комментарий">
+                <constraints nullable="false" notNullConstraintName="nn_subject_02" unique="true"
+                             uniqueConstraintName="subject_uniq"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2025.08.22.1245 init (9)" author="avmakarov">
+        <preConditions>
+            <not>
+                <tableExists tableName="exercise"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="exercise">
+            <column name="id" type="number">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(1000)" remarks="Название предмета">
+                <constraints nullable="false" notNullConstraintName="nn_subject_01" unique="true"
+                             uniqueConstraintName="subject_uniq"/>
+            </column>
+            <column name="comment" type="varchar(1000)" remarks="Дополнительный комментарий">
+                <constraints nullable="false" notNullConstraintName="nn_subject_02" unique="true"
+                             uniqueConstraintName="subject_uniq"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2025.08.22.1245 init (10)" author="avmakarov">
+        <preConditions>
+            <not>
+                <tableExists tableName="attachment"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="attachment">
+            <column name="id" type="number">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(100)" remarks="Отображаемый текст">
+                <constraints nullable="false" notNullConstraintName="nn_attachment_01"/>
+            </column>
+            <column name="href" type="varchar(4000)" remarks="Ссылка">
+                <constraints nullable="false" notNullConstraintName="nn_attachment_02"/>
+            </column>
+            <column name="exercise_id">
+                <constraints nullable="false" notNullConstraintName="nn_attachment_03"
+                             referencedTableName="exercise" referencedColumnNames="id"
+                             foreignKeyName="fk_attachment_exercise" deleteCascade="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2025.08.22.1245 init (11)" author="avmakarov">
+        <preConditions>
+            <not>
+                <tableExists tableName="lesson"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="lesson" remarks="Урок">
+            <column name="id" type="number">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="teacher_id" type="number"/>
+            <column name="class_id" type="number"/>
+            <column name="date" type="timestamp">
+                <constraints nullable="false" notNullConstraintName="nn_lesson_date"/>
+            </column>
+            <column name="subject_id" type="number">
+                <constraints nullable="false" notNullConstraintName="nn_lesson_subject"
+                             referencedTableName="subject" referencedColumnNames="id"
+                             foreignKeyName="fk_lesson_subject" deleteCascade="true"/>
+            </column>
+            <column name="status" type="varchar(30)" remarks="Признак урока"/>
+            <column name="title" type="varchar(1000)" remarks="Основная тема урока">
+                <constraints nullable="false" notNullConstraintName="nn_lesson_title"/>
+            </column>
+            <column name="sick_exercise" type="number" remarks="Задание для болеющих"/>
+            <column name="self_exercise" type="number" remarks="Задание для всех"/>
+            <column name="control_exercise" type="number" remarks="Контрольное задание"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
