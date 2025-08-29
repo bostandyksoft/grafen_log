@@ -2,6 +2,7 @@ Ext.define('Admin.MainView', {
     extend : 'Ext.tab.Panel',
     requires: [
         'Admin.view.CRUDGrid',
+        'Admin.view.UsersGrid',
         'Admin.base.SchoolClass',
         'Admin.base.Student',
         'Admin.base.Teacher',
@@ -12,6 +13,9 @@ Ext.define('Admin.MainView', {
 
     initComponent: function() {
         this.items = [{
+            xtype: 'users',
+            title: 'Пользователи'
+        },{
             xtype: 'crud',
             title: 'Классы',
             object: Log.base.Object.get('Admin.base.SchoolClass')

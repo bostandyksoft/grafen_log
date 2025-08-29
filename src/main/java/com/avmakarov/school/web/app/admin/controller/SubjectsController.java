@@ -1,7 +1,7 @@
 package com.avmakarov.school.web.app.admin.controller;
 
 import com.avmakarov.school.model.service.SubjectService;
-import com.avmakarov.school.web.mapper.SubjectMapper;
+import com.avmakarov.school.web.app.admin.mapper.SubjectMapper;
 import com.avmakarov.school.web.app.admin.transport.SubjectTO;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -29,12 +29,18 @@ public class SubjectsController {
     }
 
     @Transactional
-    @PostMapping("/save")
+    @PostMapping
     public SubjectTO save(@Valid @RequestBody SubjectTO transport) {
         return mapper.transportSubject(
                 service.save(
                         mapper.domain(service, transport)
                 )
         );
+    }
+
+    @Transactional
+    @DeleteMapping
+    public void delete(@RequestBody List<Long> ids) {
+        service.removeAll(ids);
     }
 }

@@ -2,8 +2,8 @@ Ext.define('Admin.base.Subject', {
     extend: 'Log.base.Object',
 
     loadUrl: 'app/admin/subject/all',
-    saveUrl: 'app/admin/subject/save',
-    deleteUrl: 'app/admin/subject/delete',
+    saveUrl: 'app/admin/subject',
+    deleteUrl: 'app/admin/subject',
 
     fields: [{
         name: 'oid',

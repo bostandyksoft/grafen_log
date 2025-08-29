@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,10 +46,18 @@ public class SecurityConfig {
             if (user.isEmpty()) {
                 throw new UsernameNotFoundException(username);
             }
+            List<GrantedAuthority> authorities = new ArrayList<>();
+            if (user.get().isAdmin()) {
+                authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+            }
             return new org.springframework.security.core.userdetails.User(
                     user.get().getLogin(),
                     user.get().getPassword(),
-                    List.of(new SimpleGrantedAuthority("ROLE_USER"))
+                    user.get().isActive(),
+                    true,
+                    true,
+                    true,
+                    authorities
             );
         };
     }
@@ -69,6 +79,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .rememberMe(rememberMe -> rememberMe
+                        .key("LRM")
+                        .tokenValiditySeconds(86400) // 24 часа
+                        .userDetailsService(userDetailsService()))
                 .formLogin(login ->
                         login
                                 .loginPage("/login.html")
@@ -79,9 +93,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
                                 .requestMatchers("/login.html", "/src/extjs/**", "/src/app/common.js", "/src/app/login/**", "/app/login/**", "/perform_login").permitAll()
+                                .requestMatchers("/admin.html", "/src/app/admin/**", "/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/error").permitAll()
-                                .requestMatchers("/**").hasRole("USER")
-                                .requestMatchers("/admin/**").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable);

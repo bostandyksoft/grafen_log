@@ -2,8 +2,8 @@ Ext.define('Admin.base.SchoolClass', {
     extend: 'Log.base.Object',
 
     loadUrl: 'app/admin/class/all',
-    saveUrl: 'app/admin/class/save',
-    deleteUrl: 'app/admin/class/delete',
+    saveUrl: 'app/admin/class',
+    deleteUrl: 'app/admin/class',
 
     fields: [{
         name: 'oid',

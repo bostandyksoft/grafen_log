@@ -12,6 +12,8 @@ Ext.define('Login.controller.MainView', {
         const registerForm = new Ext.form.Panel({
             title: 'Регистрация',
             floating: true,
+            frame: true,
+            modal: true,
             bodyPadding: 10,
             autoHeight: true,
             width: '20%',
@@ -66,6 +68,7 @@ Ext.define('Login.controller.MainView', {
                 handler: function () {
                     registerForm.hide();
                     registerForm.close();
+                    registerForm.destroy();
                 }
             }]
         });
@@ -83,7 +86,7 @@ Ext.define('Login.controller.MainView', {
                 headers: {
                     'X-CSRF-TOKEN': Ext.getCSRF()
                 },
-                success: function(form, action) {
+                success: function (form, action) {
                     Ext.getBody().unmask();
                     // Spring Security вернет редирект, обрабатываем его
                     var response = Ext.decode(action.response.responseText);
@@ -93,7 +96,7 @@ Ext.define('Login.controller.MainView', {
                         window.location.href = '/home';
                     }
                 },
-                failure: function(form, action) {
+                failure: function (form, action) {
                     Ext.getBody().unmask();
                     switch (action.failureType) {
                         case Ext.form.action.Action.CONNECT_FAILURE:
@@ -107,6 +110,12 @@ Ext.define('Login.controller.MainView', {
                     }
                 }
             });
+        }
+    },
+
+    fieldKey: function(field, e) {
+        if (e.getKey() === e.ENTER) {
+            this.doLogin();
         }
     }
 

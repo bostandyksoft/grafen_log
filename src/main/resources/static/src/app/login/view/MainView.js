@@ -21,18 +21,29 @@ Ext.define('Login.view.MainView', {
         allowBlank: false,
         fieldLabel: 'Логин',
         name: 'username',
-        msgTarget: 'qtip'
+        msgTarget: 'qtip',
+        listeners: {
+            specialkey: 'fieldKey'
+        }
     }, {
         allowBlank: false,
         fieldLabel: 'Пароль',
         name: 'password',
         inputType: 'password',
-        msgTarget: 'qtip'
+        msgTarget: 'qtip',
+        listeners: {
+            specialkey: 'fieldKey'
+        }
+    }, {
+        xtype: 'checkbox',
+        fieldLabel: 'Запомнить меня',
+        name: 'remember-me',
+        value : true
     }],
 
     buttons: [
         {text: 'Регистрация', handler: 'doRegister'},
-        {text: 'Вход', handler: 'doLogin', formBind: true}
+        {text: 'Вход', id: 'login', handler: 'doLogin', formBind: true}
     ],
 
     defaults: {

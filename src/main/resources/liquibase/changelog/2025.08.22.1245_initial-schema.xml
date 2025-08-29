@@ -6,6 +6,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
     <changeSet id="2025.08.22.1245 init (1)" author="avmakarov">
+        <validCheckSum>ANY</validCheckSum>
         <preConditions onFail="MARK_RAN">
             <not>
                 <sequenceExists sequenceName="global_seq"/>
@@ -15,6 +16,7 @@
     </changeSet>
 
     <changeSet id="2025.08.22.1245 init (1.5)" author="avmakarov">
+        <validCheckSum>ANY</validCheckSum>
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="log_person"/>
@@ -22,15 +24,16 @@
         </preConditions>
         <createTable tableName="log_person" remarks="Карточка личной информации о человеке">
             <column name="id" type="number">
-                <constraints primaryKey="true" nullable="false"/>
+                <constraints primaryKey="true"/>
             </column>
             <column name="full_name" type="varchar(100)" remarks="ФИО">
-                <constraints nullable="false"/>
+                <constraints nullable="false" notNullConstraintName="nn_person_fio"/>
             </column>
         </createTable>
     </changeSet>
 
-    <changeSet id="2025.08.22.1245 init (1.6)" author="avmakarov">
+    <changeSet id="2025.08.22.1245 users" author="avmakarov">
+        <validCheckSum>ANY</validCheckSum>
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="log_user"/>
@@ -38,21 +41,34 @@
         </preConditions>
         <createTable tableName="log_user" remarks="Карточка аутентификационной информации">
             <column name="id" type="number">
-                <constraints primaryKey="true" nullable="false"/>
+                <constraints primaryKey="true"/>
             </column>
             <column name="login" type="varchar(100)" remarks="Логин/Email">
-                <constraints nullable="false" unique="true" uniqueConstraintName="uniq_user"/>
+                <constraints nullable="false" notNullConstraintName="nn_user_login" unique="true" uniqueConstraintName="uniq_user"/>
             </column>
             <column name="password" type="varchar(1000)" remarks="Пароль">
-                <constraints nullable="false"/>
+                <constraints nullable="false" notNullConstraintName="nn_user_password"/>
             </column>
             <column name="info" type="varchar(100)" remarks="Информация">
-                <constraints nullable="false"/>
+                <constraints nullable="false" notNullConstraintName="nn_user_info"/>
+            </column>
+            <column name="is_admin" type="number(1)" remarks="Администратор" defaultValue="0">
+                <constraints nullable="false" notNullConstraintName="nn_user_admin"/>
+            </column>
+            <column name="is_active" type="number(1)" remarks="Активен" defaultValue="0">
+                <constraints nullable="false" notNullConstraintName="nn_user_activa"/>
+            </column>
+            <column name="teacher_id" type="number" remarks="Учитель">
             </column>
         </createTable>
+        <addForeignKeyConstraint baseTableName="log_user" baseColumnNames="teacher_id"
+                                 constraintName="fk_user_teacher" referencedTableName="log_teacher"
+                                 referencedColumnNames="id"
+                                 onDelete="SET NULL"/>
     </changeSet>
 
     <changeSet id="2025.08.22.1245 init (2)" author="avmakarov">
+        <validCheckSum>ANY</validCheckSum>
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="log_class"/>
@@ -60,15 +76,16 @@
         </preConditions>
         <createTable tableName="log_class" remarks="Учебный класс">
             <column name="id" type="number">
-                <constraints primaryKey="true" nullable="false"/>
+                <constraints primaryKey="true"/>
             </column>
             <column name="name" type="varchar(100)">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false" notNullConstraintName="nn_class_name" unique="true"/>
             </column>
         </createTable>
     </changeSet>
 
     <changeSet id="2025.08.22.1245 init (3)" author="avmakarov">
+        <validCheckSum>ANY</validCheckSum>
         <preConditions onFail="MARK_RAN">
             <and>
                 <tableExists tableName="log_class"/>
@@ -79,21 +96,19 @@
         </preConditions>
         <createTable tableName="log_student" remarks="Ученик">
             <column name="id" type="number">
-                <constraints primaryKey="true" nullable="false"/>
+                <constraints primaryKey="true"/>
             </column>
             <column name="person_id" type="number">
-                <constraints nullable="false"/>
+                <constraints nullable="false" notNullConstraintName="nn_student_person"/>
             </column>
             <column name="class_id" type="number">
                 <constraints nullable="true"/>
-            </column>
-            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
-                <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
 
     <changeSet id="2025.08.22.1245 init (4)" author="avmakarov">
+        <validCheckSum>ANY</validCheckSum>
         <preConditions onFail="MARK_RAN">
             <not>
                 <foreignKeyConstraintExists foreignKeyName="fk_student_class"/>
@@ -111,6 +126,7 @@
     </changeSet>
 
     <changeSet id="2025.08.22.1245 init (5)" author="avmakarov">
+        <validCheckSum>ANY</validCheckSum>
         <preConditions onFail="MARK_RAN">
             <tableExists tableName="log_person"/>
             <tableExists tableName="log_student"/>
@@ -130,6 +146,7 @@
     </changeSet>
 
     <changeSet id="2025.08.22.1245 init (6)" author="avmakarov">
+        <validCheckSum>ANY</validCheckSum>
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="log_teacher"/>
@@ -137,18 +154,16 @@
         </preConditions>
         <createTable tableName="log_teacher" remarks="Учитель">
             <column name="id" type="number">
-                <constraints primaryKey="true" nullable="false"/>
+                <constraints primaryKey="true"/>
             </column>
             <column name="person_id" type="number">
-                <constraints nullable="false"/>
-            </column>
-            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
 
     <changeSet id="2025.08.22.1245 init (7)" author="avmakarov">
+        <validCheckSum>ANY</validCheckSum>
         <preConditions onFail="MARK_RAN">
             <tableExists tableName="log_person"/>
             <tableExists tableName="log_teacher"/>
@@ -168,6 +183,7 @@
     </changeSet>
 
     <changeSet id="2025.08.22.1245 init (8)" author="avmakarov">
+        <validCheckSum>ANY</validCheckSum>
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="log_subject"/>
@@ -176,7 +192,7 @@
 
         <createTable tableName="log_subject">
             <column name="id" type="number">
-                <constraints primaryKey="true" nullable="false"/>
+                <constraints primaryKey="true"/>
             </column>
             <column name="title" type="varchar(1000)" remarks="Название предмета">
                 <constraints nullable="false" notNullConstraintName="nn_subject_01" unique="true"
@@ -190,6 +206,7 @@
     </changeSet>
 
     <changeSet id="2025.08.22.1245 init (9)" author="avmakarov">
+        <validCheckSum>ANY</validCheckSum>
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="log_exercise"/>
@@ -198,7 +215,7 @@
 
         <createTable tableName="log_exercise">
             <column name="id" type="number">
-                <constraints primaryKey="true" nullable="false"/>
+                <constraints primaryKey="true"/>
             </column>
             <column name="title" type="varchar(1000)" remarks="Название предмета">
                 <constraints nullable="false" notNullConstraintName="nn_exercise_01"/>
@@ -210,6 +227,7 @@
     </changeSet>
 
     <changeSet id="2025.08.22.1245 init (10)" author="avmakarov">
+        <validCheckSum>ANY</validCheckSum>
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="log_attachment"/>
@@ -218,7 +236,7 @@
 
         <createTable tableName="log_attachment">
             <column name="id" type="number">
-                <constraints primaryKey="true" nullable="false"/>
+                <constraints primaryKey="true"/>
             </column>
             <column name="title" type="varchar(100)" remarks="Отображаемый текст">
                 <constraints nullable="false" notNullConstraintName="nn_attachment_01"/>
@@ -235,6 +253,7 @@
     </changeSet>
 
     <changeSet id="2025.08.22.1245 init (11)" author="avmakarov">
+        <validCheckSum>ANY</validCheckSum>
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="log_lesson"/>
@@ -243,7 +262,7 @@
 
         <createTable tableName="log_lesson" remarks="Урок">
             <column name="id" type="number">
-                <constraints primaryKey="true" nullable="false"/>
+                <constraints primaryKey="true"/>
             </column>
             <column name="teacher_id" type="number"/>
             <column name="class_id" type="number"/>
@@ -262,6 +281,28 @@
             <column name="sick_exercise" type="number" remarks="Задание для болеющих"/>
             <column name="self_exercise" type="number" remarks="Задание для всех"/>
             <column name="control_exercise" type="number" remarks="Контрольное задание"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2025.08.22.1245 user students" author="avmakarov">
+        <validCheckSum>ANY</validCheckSum>
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="log_user_students"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="log_user_students" remarks="Привязанные ученики">
+            <column name="user_id" type="number">
+                <constraints primaryKey="true" referencedTableName="log_user"
+                             referencedColumnNames="id" foreignKeyName="user_students_user"
+                             deleteCascade="true"/>
+            </column>
+            <column name="student_id" type="number">
+                <constraints primaryKey="true" referencedTableName="log_student"
+                             referencedColumnNames="id" foreignKeyName="user_students_student"
+                             deleteCascade="true"/>
+            </column>
         </createTable>
     </changeSet>
 

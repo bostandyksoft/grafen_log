@@ -5,11 +5,11 @@ Ext.define('Log.base.Object', {
 
         map: {},
 
-        get: function(value) {
+        get: function (value) {
             return Log.base.Object.map[value];
         },
 
-        put: function(instance) {
+        put: function (instance) {
             Log.base.Object.map[instance.$className] = instance;
         }
 
@@ -23,18 +23,18 @@ Ext.define('Log.base.Object', {
 
     editPanel: null,
 
-    getFields : function () {
+    getFields: function () {
         const me = this;
         return me.fields.map(field => {
             return field.name;
         });
     },
 
-    all : function(config) {
+    all: function (config) {
         const me = this;
         return new Ext.data.Store(Ext.apply({
             model: new Ext.data.Model({
-                fields : me.getFields()
+                fields: me.getFields()
             }),
             proxy: {
                 type: 'ajax',
@@ -45,6 +45,34 @@ Ext.define('Log.base.Object', {
             },
             autoLoad: true
         }, config))
+    },
+
+    save: function(object, cb) {
+        const me = this;
+        Log.sendRequest(me.saveUrl, object, cb)
+    },
+
+    deleteRecords: function (store, selected) {
+        const me = this;
+        Ext.Msg.show({
+            title: 'Удаление записей',
+            message: `Вы уверены, что хотите удалить ${selected.length} записей?`,
+            buttons: Ext.Msg.YESNO,
+            icon: Ext.Msg.QUESTION,
+            fn: function (btn) {
+                if (btn === 'yes') {
+                    Log.sendRequest(
+                        me.deleteUrl,
+                        selected.map(r => r.get('oid')).filter(r => !!r),
+                        function () {
+                            store.remove(selected);
+                        }, {
+                            method: 'DELETE'
+                        }
+                    )
+                }
+            }
+        });
     }
 
 })

@@ -1,7 +1,7 @@
 package com.avmakarov.school.web.app.admin.controller;
 
 import com.avmakarov.school.model.service.ClassService;
-import com.avmakarov.school.web.mapper.ClassMapper;
+import com.avmakarov.school.web.app.admin.mapper.ClassMapper;
 import com.avmakarov.school.web.app.admin.transport.ClassTO;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -29,12 +29,18 @@ public class ClassController {
     }
 
     @Transactional
-    @PostMapping("/save")
+    @PostMapping
     public  ClassTO save(@Valid @RequestBody ClassTO classTO) {
         return classMapper.transportClass(
                 classService.save(
                         classMapper.domain(classService, classTO)
                 )
         );
+    }
+
+    @Transactional
+    @DeleteMapping
+    public void delete(@RequestBody List<Long> ids) {
+        classService.removeAll(ids);
     }
 }

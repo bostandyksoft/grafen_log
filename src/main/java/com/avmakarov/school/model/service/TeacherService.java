@@ -6,6 +6,8 @@ import com.avmakarov.school.model.repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TeacherService {
 
@@ -26,5 +28,9 @@ public class TeacherService {
 
     public Teacher save(Teacher domain) {
         return repository.save(domain);
+    }
+
+    public void removeAll(List<Long> ids) {
+        repository.deleteAllById(ids);
     }
 }

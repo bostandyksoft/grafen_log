@@ -1,4 +1,4 @@
-package com.avmakarov.school.web.mapper;
+package com.avmakarov.school.web.app.admin.mapper;
 
 import com.avmakarov.school.model.domain.Person;
 import com.avmakarov.school.model.domain.SchoolClass;
@@ -24,8 +24,9 @@ public abstract class StudentMapper {
     @Mapping(target = "classId", source = "schoolClass.id")
     public abstract StudentTO transportStudent(Student domain);
 
+    @Named("transportStudents")
     @IterableMapping(qualifiedByName = "transportStudent")
-    public abstract List<StudentTO> list(Iterable<Student> all);
+    public abstract List<StudentTO> transportStudents(Iterable<Student> all);
 
     public Student domain(StudentService service, @Valid StudentTO transport) {
         Student domain = null;

@@ -6,6 +6,10 @@ import com.avmakarov.school.model.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 @Service
 public class StudentService {
 
@@ -21,10 +25,20 @@ public class StudentService {
     }
 
     public Student findOne(Long oid) {
-        return repository.findById(oid).orElseThrow(()->new NotFoundException.Student(oid));
+        return repository.findById(oid).orElseThrow(() -> new NotFoundException.Student(oid));
     }
 
     public Student save(Student domain) {
         return repository.save(domain);
+    }
+
+    public List<Student> findAllByIds(List<Long> ids) {
+        return StreamSupport.stream(
+                repository.findAllById(ids).spliterator(), false
+        ).collect(Collectors.toList());
+    }
+
+    public void removeAll(List<Long> ids) {
+        repository.deleteAllById(ids);
     }
 }

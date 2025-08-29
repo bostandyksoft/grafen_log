@@ -1,7 +1,7 @@
 package com.avmakarov.school.web.app.admin.controller;
 
 import com.avmakarov.school.model.service.StudentService;
-import com.avmakarov.school.web.mapper.StudentMapper;
+import com.avmakarov.school.web.app.admin.mapper.StudentMapper;
 import com.avmakarov.school.web.app.admin.transport.StudentTO;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -25,11 +25,11 @@ public class StudentController {
 
     @GetMapping("/all")
     public List<StudentTO> all() {
-        return mapper.list(service.findAll());
+        return mapper.transportStudents(service.findAll());
     }
 
     @Transactional
-    @PostMapping("/save")
+    @PostMapping
     public StudentTO save(@Valid @RequestBody StudentTO transport) {
         return mapper.transportStudent(
                 service.save(
@@ -37,4 +37,11 @@ public class StudentController {
                 )
         );
     }
+
+    @Transactional
+    @DeleteMapping
+    public void delete(@RequestBody List<Long> ids) {
+        service.removeAll(ids);
+    }
+
 }

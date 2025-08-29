@@ -1,4 +1,4 @@
-package com.avmakarov.school.web.mapper;
+package com.avmakarov.school.web.app.admin.mapper;
 
 import com.avmakarov.school.model.domain.Person;
 import com.avmakarov.school.model.domain.Teacher;

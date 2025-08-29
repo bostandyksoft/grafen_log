@@ -1,7 +1,15 @@
 Ext.define('Admin.view.CRUDGrid', {
-    extend: 'Ext.grid.Panel',
+    extend: 'Ext.container.Container',
+
+    requires: ['Admin.controller.CRUDGridController'],
+
+    controller: 'crud.grid',
 
     alias: 'widget.crud',
+
+    layout: 'fit',
+
+    viewModel: true,
 
     config: {
         object: null
@@ -10,68 +18,12 @@ Ext.define('Admin.view.CRUDGrid', {
     initComponent: function () {
         const me = this;
         me.createLayout();
-
-        me.plugins = [
-            new Ext.grid.plugin.CellEditing({
-                cellediting: {
-                    clicksToEdit: 1
-                },
-                listeners: {
-                    edit: function (editor, context) {
-                        const record = context.record;
-                        let allRequired = true;
-                        for (let i = 0; i < me.object.fields.length; i++) {
-                            const field = me.object.fields[i];
-                            if (!record.get(field.name)) {
-                                if (field.allowBlank === false) {
-                                    allRequired = false;
-                                    break;
-                                }
-                            }
-                        }
-                        if (allRequired) {
-                            Ext.Ajax.request({
-                                url: me.object.saveUrl,
-                                jsonData: record.getData(),
-                                headers: {
-                                    'X-CSRF-TOKEN': Ext.getCSRF()
-                                },
-                                success: function (response, opts) {
-                                    record.commit();
-                                    const data = JSON.parse(response.responseText);
-                                    if (!record.get('oid')) {
-                                        record.set('oid', data.oid);
-                                        me.store.add({});
-                                    }
-                                },
-                                failure: function (response, opts) {
-                                    Ext.toast({
-                                        html: 'Ошибка',
-                                        title: response.status
-                                    });
-                                }
-                            });
-                        }
-                    }
-                }
-            })
-        ]
-
-        me.store = me.object.all({
-            listeners: {
-                load: function (sender) {
-                    sender.add({})
-                }
-            }
-        })
-
         me.callParent(arguments);
     },
 
     createLayout: function () {
         const me = this;
         const obj = me.object;
-
         let columns = [];
         for (let i = 0; i < obj.fields.length; i++) {
             const field = obj.fields[i];
@@ -104,6 +56,41 @@ Ext.define('Admin.view.CRUDGrid', {
             columns.push(config)
         }
         me.columns = columns;
+
+        me.items = [
+            me.grid = new Ext.grid.Panel({
+                reference: 'grid',
+                tbar: [{
+                    text: 'Добавить запись',
+                    iconCls: 'fa fa-plus',
+                    handler: 'addRecord'
+                }, {
+                    text: 'Удалить',
+                    iconCls: 'fa fa-remove',
+                    handler: 'removeRecord',
+                    disabled: true,
+                    bind: {
+                        disabled: '{!grid.selection}'
+                    }
+                }],
+                selModel: {
+                    type: 'cellmodel'
+                },
+                plugins: [
+                    new Ext.grid.plugin.CellEditing({
+                        cellediting: {
+                            clicksToEdit: 1
+                        },
+                        listeners: {
+                            edit: 'edit'
+                        }
+                    })
+                ],
+                columns: columns,
+                store: me.object.all()
+            })
+        ]
+
     },
 
     storeRenderer: function (store, displayField) {

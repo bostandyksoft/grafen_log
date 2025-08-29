@@ -6,6 +6,8 @@ import com.avmakarov.school.model.repository.ClassRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ClassService {
 
@@ -26,5 +28,9 @@ public class ClassService {
 
     public SchoolClass save(SchoolClass donain) {
         return classRepository.save(donain);
+    }
+
+    public void removeAll(List<Long> ids) {
+        classRepository.deleteAllById(ids);
     }
 }

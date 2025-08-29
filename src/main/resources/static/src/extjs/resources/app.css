@@ -47,3 +47,8 @@
         .rating-green {
             background-color: #2ed573;
         }
+
+        .row-disabled {
+            color: darkgrey;
+            background-color: #dedede;
+        }

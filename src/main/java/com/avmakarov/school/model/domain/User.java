@@ -1,10 +1,11 @@
 package com.avmakarov.school.model.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.hibernate.type.NumericBooleanConverter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "log_user")
@@ -24,6 +25,26 @@ public class User extends AbstractBaseEntity {
     @Size(max = 1000)
     @Column(name = "info", nullable = false)
     private String info;
+
+    @Column(name = "is_admin")
+    @Convert(converter = NumericBooleanConverter.class)
+    private boolean admin;
+
+    @Column(name = "is_active")
+    @Convert(converter = NumericBooleanConverter.class)
+    private boolean active;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "teacher_id")
+    private Teacher teacher;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "log_user_students",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "student_id")
+    )
+    private List<Student> students;
 
     public User() {
     }
@@ -57,6 +78,38 @@ public class User extends AbstractBaseEntity {
 
     public void setInfo(String info) {
         this.info = info;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public Teacher getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
+    }
+
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<Student> students) {
+        this.students = students;
     }
 
     @Override
