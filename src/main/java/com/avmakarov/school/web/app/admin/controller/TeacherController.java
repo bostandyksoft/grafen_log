@@ -2,7 +2,7 @@ package com.avmakarov.school.web.app.admin.controller;
 
 import com.avmakarov.school.model.service.TeacherService;
 import com.avmakarov.school.web.mapper.TeacherMapper;
-import com.avmakarov.school.web.transport.TeacherTO;
+import com.avmakarov.school.web.app.admin.transport.TeacherTO;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

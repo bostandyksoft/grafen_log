@@ -1,5 +1,5 @@
 Ext.define('Admin.base.Student', {
-    extend: 'Admin.base.Object',
+    extend: 'Log.base.Object',
 
     uses: ['Admin.base.Class'],
 
@@ -24,5 +24,5 @@ Ext.define('Admin.base.Student', {
         }
     }],
 }, ()=> {
-    Admin.base.Object.put(new Admin.base.Student())
+    Log.base.Object.put(new Admin.base.Student())
 })

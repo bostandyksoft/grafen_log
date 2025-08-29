@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "person")
+@Table(name = "log_person")
 public class Person extends AbstractBaseEntity {
 
     @NotBlank

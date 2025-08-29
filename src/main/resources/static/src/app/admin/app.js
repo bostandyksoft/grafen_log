@@ -1,4 +1,3 @@
-Ext.Loader.disableCaching = true;
 Ext.Loader.setPath('Admin', 'src/app/admin')
 
 Ext.application({

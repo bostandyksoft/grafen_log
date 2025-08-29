@@ -5,7 +5,7 @@ import com.avmakarov.school.model.domain.SchoolClass;
 import com.avmakarov.school.model.domain.Student;
 import com.avmakarov.school.model.service.ClassService;
 import com.avmakarov.school.model.service.StudentService;
-import com.avmakarov.school.web.transport.StudentTO;
+import com.avmakarov.school.web.app.admin.transport.StudentTO;
 import jakarta.validation.Valid;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "lesson")
+@Table(name = "log_lesson")
 public class Lesson extends AbstractBaseEntity {
 
     public enum LessonStatus {

@@ -1,4 +1,4 @@
-Ext.define('Admin.CRUDGrid', {
+Ext.define('Admin.view.CRUDGrid', {
     extend: 'Ext.grid.Panel',
 
     alias: 'widget.crud',
@@ -33,6 +33,9 @@ Ext.define('Admin.CRUDGrid', {
                             Ext.Ajax.request({
                                 url: me.object.saveUrl,
                                 jsonData: record.getData(),
+                                headers: {
+                                    'X-CSRF-TOKEN': Ext.getCSRF()
+                                },
                                 success: function (response, opts) {
                                     record.commit();
                                     const data = JSON.parse(response.responseText);
@@ -81,7 +84,7 @@ Ext.define('Admin.CRUDGrid', {
                 editor: me.createEditor(field)
             };
             if (Ext.isObject(field.type)) {
-                const store = Admin.base.Object.get(field.type.object).all();
+                const store = Log.base.Object.get(field.type.object).all();
                 Ext.apply(config, {
                     renderer: me.storeRenderer(store, field.type.displayField),
                     editor: {

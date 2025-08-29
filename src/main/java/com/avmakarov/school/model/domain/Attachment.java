@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "attachment")
+@Table(name = "log_attachment")
 public class Attachment extends AbstractBaseEntity {
 
     @NotBlank

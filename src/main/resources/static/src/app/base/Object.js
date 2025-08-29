@@ -1,4 +1,4 @@
-Ext.define('Admin.base.Object', {
+Ext.define('Log.base.Object', {
     extend: 'Ext.Base',
 
     statics: {
@@ -6,11 +6,11 @@ Ext.define('Admin.base.Object', {
         map: {},
 
         get: function(value) {
-            return Admin.base.Object.map[value];
+            return Log.base.Object.map[value];
         },
 
         put: function(instance) {
-            Admin.base.Object.map[instance.$className] = instance;
+            Log.base.Object.map[instance.$className] = instance;
         }
 
     },

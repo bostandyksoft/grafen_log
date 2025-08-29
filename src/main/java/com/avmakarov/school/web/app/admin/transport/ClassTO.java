@@ -1,4 +1,4 @@
-package com.avmakarov.school.web.transport;
+package com.avmakarov.school.web.app.admin.transport;
 
 import jakarta.validation.constraints.NotNull;
 

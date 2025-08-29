@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "user")
+@Table(name = "log_user")
 public class User extends AbstractBaseEntity {
 
     @NotBlank
@@ -20,12 +20,18 @@ public class User extends AbstractBaseEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @NotBlank
+    @Size(max = 1000)
+    @Column(name = "info", nullable = false)
+    private String info;
+
     public User() {
     }
 
-    public User(String login, String password) {
+    public User(String login, String password, String info) {
         this.login = login;
         this.password = password;
+        this.info = info;
     }
 
     // геттеры и сеттеры
@@ -45,11 +51,20 @@ public class User extends AbstractBaseEntity {
         this.password = password;
     }
 
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", login='" + login + '\'' +
+                ", info='" + info + '\'' +
                 '}';
     }
 }

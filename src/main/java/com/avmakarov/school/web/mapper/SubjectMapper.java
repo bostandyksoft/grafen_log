@@ -2,7 +2,7 @@ package com.avmakarov.school.web.mapper;
 
 import com.avmakarov.school.model.domain.Subject;
 import com.avmakarov.school.model.service.SubjectService;
-import com.avmakarov.school.web.transport.SubjectTO;
+import com.avmakarov.school.web.app.admin.transport.SubjectTO;
 import org.mapstruct.*;
 
 import java.util.List;

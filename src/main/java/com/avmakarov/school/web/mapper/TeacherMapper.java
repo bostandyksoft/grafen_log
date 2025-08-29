@@ -3,7 +3,7 @@ package com.avmakarov.school.web.mapper;
 import com.avmakarov.school.model.domain.Person;
 import com.avmakarov.school.model.domain.Teacher;
 import com.avmakarov.school.model.service.TeacherService;
-import com.avmakarov.school.web.transport.TeacherTO;
+import com.avmakarov.school.web.app.admin.transport.TeacherTO;
 import jakarta.validation.Valid;
 import org.mapstruct.*;
 

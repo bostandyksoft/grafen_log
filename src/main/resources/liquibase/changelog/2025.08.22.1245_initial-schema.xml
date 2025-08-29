@@ -6,7 +6,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
     <changeSet id="2025.08.22.1245 init (1)" author="avmakarov">
-        <preConditions>
+        <preConditions onFail="MARK_RAN">
             <not>
                 <sequenceExists sequenceName="global_seq"/>
             </not>
@@ -15,12 +15,12 @@
     </changeSet>
 
     <changeSet id="2025.08.22.1245 init (1.5)" author="avmakarov">
-        <preConditions>
+        <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="person"/>
+                <tableExists tableName="log_person"/>
             </not>
         </preConditions>
-        <createTable tableName="person" remarks="Карточка личной информации о человеке">
+        <createTable tableName="log_person" remarks="Карточка личной информации о человеке">
             <column name="id" type="number">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -31,31 +31,34 @@
     </changeSet>
 
     <changeSet id="2025.08.22.1245 init (1.6)" author="avmakarov">
-        <preConditions>
+        <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="user"/>
+                <tableExists tableName="log_user"/>
             </not>
         </preConditions>
-        <createTable tableName="user" remarks="Карточка аутентификационной информации">
+        <createTable tableName="log_user" remarks="Карточка аутентификационной информации">
             <column name="id" type="number">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="login" type="varchar(100)" remarks="Логин/Email">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="true" uniqueConstraintName="uniq_user"/>
             </column>
             <column name="password" type="varchar(1000)" remarks="Пароль">
+                <constraints nullable="false"/>
+            </column>
+            <column name="info" type="varchar(100)" remarks="Информация">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
 
     <changeSet id="2025.08.22.1245 init (2)" author="avmakarov">
-        <preConditions>
+        <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="class"/>
+                <tableExists tableName="log_class"/>
             </not>
         </preConditions>
-        <createTable tableName="class" remarks="Учебный класс">
+        <createTable tableName="log_class" remarks="Учебный класс">
             <column name="id" type="number">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -66,15 +69,15 @@
     </changeSet>
 
     <changeSet id="2025.08.22.1245 init (3)" author="avmakarov">
-        <preConditions>
+        <preConditions onFail="MARK_RAN">
             <and>
-                <tableExists tableName="class"/>
+                <tableExists tableName="log_class"/>
                 <not>
-                    <tableExists tableName="student"/>
+                    <tableExists tableName="log_student"/>
                 </not>
             </and>
         </preConditions>
-        <createTable tableName="student" remarks="Ученик">
+        <createTable tableName="log_student" remarks="Ученик">
             <column name="id" type="number">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -91,16 +94,16 @@
     </changeSet>
 
     <changeSet id="2025.08.22.1245 init (4)" author="avmakarov">
-        <preConditions>
+        <preConditions onFail="MARK_RAN">
             <not>
                 <foreignKeyConstraintExists foreignKeyName="fk_student_class"/>
             </not>
         </preConditions>
 
         <addForeignKeyConstraint
-                baseTableName="student"
+                baseTableName="log_student"
                 baseColumnNames="class_id"
-                referencedTableName="class"
+                referencedTableName="log_class"
                 referencedColumnNames="id"
                 constraintName="fk_student_class"
                 onDelete="SET NULL"
@@ -108,18 +111,18 @@
     </changeSet>
 
     <changeSet id="2025.08.22.1245 init (5)" author="avmakarov">
-        <preConditions>
-            <tableExists tableName="person"/>
-            <tableExists tableName="student"/>
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="log_person"/>
+            <tableExists tableName="log_student"/>
             <not>
                 <foreignKeyConstraintExists foreignKeyName="fk_student_person"/>
             </not>
         </preConditions>
 
         <addForeignKeyConstraint
-                baseTableName="student"
+                baseTableName="log_student"
                 baseColumnNames="person_id"
-                referencedTableName="person"
+                referencedTableName="log_person"
                 referencedColumnNames="id"
                 constraintName="fk_student_person"
                 onDelete="CASCADE"
@@ -127,12 +130,12 @@
     </changeSet>
 
     <changeSet id="2025.08.22.1245 init (6)" author="avmakarov">
-        <preConditions>
+        <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="teacher"/>
+                <tableExists tableName="log_teacher"/>
             </not>
         </preConditions>
-        <createTable tableName="teacher" remarks="Учитель">
+        <createTable tableName="log_teacher" remarks="Учитель">
             <column name="id" type="number">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -146,18 +149,18 @@
     </changeSet>
 
     <changeSet id="2025.08.22.1245 init (7)" author="avmakarov">
-        <preConditions>
-            <tableExists tableName="person"/>
-            <tableExists tableName="teacher"/>
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="log_person"/>
+            <tableExists tableName="log_teacher"/>
             <not>
                 <foreignKeyConstraintExists foreignKeyName="fk_teacher_person"/>
             </not>
         </preConditions>
 
         <addForeignKeyConstraint
-                baseTableName="teacher"
+                baseTableName="log_teacher"
                 baseColumnNames="person_id"
-                referencedTableName="person"
+                referencedTableName="log_person"
                 referencedColumnNames="id"
                 constraintName="fk_teacher_person"
                 onDelete="CASCADE"
@@ -165,13 +168,13 @@
     </changeSet>
 
     <changeSet id="2025.08.22.1245 init (8)" author="avmakarov">
-        <preConditions>
+        <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="subject"/>
+                <tableExists tableName="log_subject"/>
             </not>
         </preConditions>
 
-        <createTable tableName="subject">
+        <createTable tableName="log_subject">
             <column name="id" type="number">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -187,13 +190,13 @@
     </changeSet>
 
     <changeSet id="2025.08.22.1245 init (9)" author="avmakarov">
-        <preConditions>
+        <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="exercise"/>
+                <tableExists tableName="log_exercise"/>
             </not>
         </preConditions>
 
-        <createTable tableName="exercise">
+        <createTable tableName="log_exercise">
             <column name="id" type="number">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -207,13 +210,13 @@
     </changeSet>
 
     <changeSet id="2025.08.22.1245 init (10)" author="avmakarov">
-        <preConditions>
+        <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="attachment"/>
+                <tableExists tableName="log_attachment"/>
             </not>
         </preConditions>
 
-        <createTable tableName="attachment">
+        <createTable tableName="log_attachment">
             <column name="id" type="number">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -225,20 +228,20 @@
             </column>
             <column name="exercise_id" type="number">
                 <constraints nullable="false" notNullConstraintName="nn_attachment_03"
-                             referencedTableName="exercise" referencedColumnNames="id"
+                             referencedTableName="log_exercise" referencedColumnNames="id"
                              foreignKeyName="fk_attachment_exercise" deleteCascade="true"/>
             </column>
         </createTable>
     </changeSet>
 
     <changeSet id="2025.08.22.1245 init (11)" author="avmakarov">
-        <preConditions>
+        <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="lesson"/>
+                <tableExists tableName="log_lesson"/>
             </not>
         </preConditions>
 
-        <createTable tableName="lesson" remarks="Урок">
+        <createTable tableName="log_lesson" remarks="Урок">
             <column name="id" type="number">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -249,7 +252,7 @@
             </column>
             <column name="subject_id" type="number">
                 <constraints nullable="false" notNullConstraintName="nn_lesson_subject"
-                             referencedTableName="subject" referencedColumnNames="id"
+                             referencedTableName="log_subject" referencedColumnNames="id"
                              foreignKeyName="fk_lesson_subject" deleteCascade="true"/>
             </column>
             <column name="status" type="varchar(30)" remarks="Признак урока"/>

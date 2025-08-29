@@ -1,5 +1,5 @@
 Ext.define('Admin.base.Teacher', {
-    extend: 'Admin.base.Object',
+    extend: 'Log.base.Object',
 
     loadUrl: 'app/admin/teacher/all',
     saveUrl: 'app/admin/teacher/save',
@@ -15,5 +15,5 @@ Ext.define('Admin.base.Teacher', {
         allowBlank: false,
     }],
 }, ()=> {
-    Admin.base.Object.put(new Admin.base.Teacher())
+    Log.base.Object.put(new Admin.base.Teacher())
 })

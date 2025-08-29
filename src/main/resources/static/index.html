@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" content="${_csrf.token}"/>
+    <meta name="_csrf_header" content="${_csrf.headerName}"/>
 
     <script src="src/extjs/ext-all.js"></script>
-    <link rel="stylesheet" href="src/extjs/resources/ext-all.css">
-    <script src="src/app/index.js"></script>
+    <link rel="stylesheet" href="src/extjs/resources/theme-material-all-debug.css">
+    <script src="src/app/common.js"></script>
+    <script src="src/app/index/app.js"></script>
 </head>
 <body>
 </body>

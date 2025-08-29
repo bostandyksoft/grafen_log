@@ -1,5 +1,5 @@
 Ext.define('Admin.base.Subject', {
-    extend: 'Admin.base.Object',
+    extend: 'Log.base.Object',
 
     loadUrl: 'app/admin/subject/all',
     saveUrl: 'app/admin/subject/save',
@@ -19,5 +19,5 @@ Ext.define('Admin.base.Subject', {
         allowBlank: false
     }],
 }, ()=> {
-    Admin.base.Object.put(new Admin.base.Subject())
+    Log.base.Object.put(new Admin.base.Subject())
 })

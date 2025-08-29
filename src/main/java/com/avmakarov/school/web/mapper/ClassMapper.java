@@ -2,7 +2,7 @@ package com.avmakarov.school.web.mapper;
 
 import com.avmakarov.school.model.domain.SchoolClass;
 import com.avmakarov.school.model.service.ClassService;
-import com.avmakarov.school.web.transport.ClassTO;
+import com.avmakarov.school.web.app.admin.transport.ClassTO;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
