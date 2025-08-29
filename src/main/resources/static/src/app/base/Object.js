@@ -6,7 +6,11 @@ Ext.define('Log.base.Object', {
         map: {},
 
         get: function (value) {
-            return Log.base.Object.map[value];
+            const obj  = Log.base.Object.map[value];
+            if (!obj) {
+                throw new Error(`Class ${value} not found`);
+            }
+            return obj;
         },
 
         put: function (instance) {

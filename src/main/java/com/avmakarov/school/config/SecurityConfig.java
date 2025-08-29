@@ -47,8 +47,14 @@ public class SecurityConfig {
                 throw new UsernameNotFoundException(username);
             }
             List<GrantedAuthority> authorities = new ArrayList<>();
+            if (user.get().getTeacher() != null) {
+                authorities.add(new SimpleGrantedAuthority("ROLE_TEACHER"));
+            }
             if (user.get().isAdmin()) {
-                authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_CLASS_EDITOR"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_SUBJECT_EDITOR"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_TEACHER_EDITOR"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_USER_EDITOR"));
             }
             return new org.springframework.security.core.userdetails.User(
                     user.get().getLogin(),
@@ -93,7 +99,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
                                 .requestMatchers("/login.html", "/src/extjs/**", "/src/app/common.js", "/src/app/login/**", "/app/login/**", "/perform_login").permitAll()
-                                .requestMatchers("/admin.html", "/src/app/admin/**", "/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/app/class", "/app/class/**").hasRole("CLASS_EDITOR")
+                                .requestMatchers("/app/subject", "/app/subject/**").hasRole("SUBJECT_EDITOR")
+                                .requestMatchers("/app/teacher", "/app/teacher/**").hasRole("TEACHER_EDITOR")
+                                .requestMatchers("/app/user", "/app/user/**").hasRole("USER_EDITOR")
+                                .requestMatchers("/app/lesson", "/app/lesson/**").hasRole("TEACHER")
                                 .requestMatchers("/error").permitAll()
                                 .anyRequest().authenticated()
                 )

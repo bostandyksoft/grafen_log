@@ -1,6 +1,7 @@
 Ext.define('Index.view.LessonsGrid', {
     extend : 'Ext.grid.Panel',
     requires: [
+        'Log.base.Lesson',
         'Index.controller.LessonsGridController'
     ],
 
