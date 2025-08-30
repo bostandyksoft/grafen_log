@@ -6,11 +6,15 @@ import com.avmakarov.school.model.service.TeacherService;
 import com.avmakarov.school.web.app.transport.TeacherTO;
 import jakarta.validation.Valid;
 import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 @Mapper
 public abstract class TeacherMapper {
+
+    @Autowired
+    private TeacherService teacherService;
 
     @Named("transportTeacher")
     @Mapping(target = "oid", source = "id")
@@ -32,6 +36,11 @@ public abstract class TeacherMapper {
         }
         domain(transport, domain);
         return domain;
+    }
+
+    @Named("findTeacher")
+    protected Teacher findTeacher(Long id) {
+        return teacherService.findOne(id);
     }
 
     @Mapping(target = "id", ignore = true)

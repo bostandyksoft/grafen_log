@@ -1,7 +1,6 @@
 package com.avmakarov.school.web.app.mapper;
 
 import com.avmakarov.school.model.domain.Student;
-import com.avmakarov.school.model.domain.Teacher;
 import com.avmakarov.school.model.domain.User;
 import com.avmakarov.school.model.service.StudentService;
 import com.avmakarov.school.model.service.TeacherService;
@@ -12,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-@Mapper(uses = {StudentMapper.class})
+@Mapper(uses = {StudentMapper.class, TeacherMapper.class})
 public abstract class UserMapper {
 
     @Autowired
@@ -67,11 +66,6 @@ public abstract class UserMapper {
     @Mapping(target = "teacher", source = "teacher", qualifiedByName = "findTeacher")
     @Mapping(target = "students", source = "students", qualifiedByName = "findStudents")
     protected abstract void domain(UserTO transport, @MappingTarget User domain);
-
-    @Named("findTeacher")
-    protected Teacher findTeacher(Long id) {
-        return teacherService.findOne(id);
-    }
 
     @Named("findStudents")
     protected List<Student> findStudents(List<Long> transports) {

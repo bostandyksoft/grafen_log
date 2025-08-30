@@ -44,7 +44,8 @@
                 <constraints primaryKey="true"/>
             </column>
             <column name="login" type="varchar(100)" remarks="Логин/Email">
-                <constraints nullable="false" notNullConstraintName="nn_user_login" unique="true" uniqueConstraintName="uniq_user"/>
+                <constraints nullable="false" notNullConstraintName="nn_user_login" unique="true"
+                             uniqueConstraintName="uniq_user"/>
             </column>
             <column name="password" type="varchar(1000)" remarks="Пароль">
                 <constraints nullable="false" notNullConstraintName="nn_user_password"/>
@@ -252,7 +253,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="2025.08.22.1245 init (11)" author="avmakarov">
+    <changeSet id="2025.08.22.1245 lesson" author="avmakarov">
         <validCheckSum>ANY</validCheckSum>
         <preConditions onFail="MARK_RAN">
             <not>
@@ -264,8 +265,16 @@
             <column name="id" type="number">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="teacher_id" type="number"/>
-            <column name="class_id" type="number"/>
+            <column name="teacher_id" type="number">
+                <constraints nullable="false" notNullConstraintName="nn_lesson_teacher"
+                             referencedTableName="log_teacher" referencedColumnNames="id"
+                             foreignKeyName="fk_lesson_teacher" deleteCascade="true"/>
+            </column>
+            <column name="class_id" type="number">
+                <constraints nullable="false" notNullConstraintName="nn_lesson_class"
+                             referencedTableName="log_class" referencedColumnNames="id"
+                             foreignKeyName="fk_lesson_class" deleteCascade="true"/>
+            </column>
             <column name="date" type="timestamp">
                 <constraints nullable="false" notNullConstraintName="nn_lesson_date"/>
             </column>
@@ -274,8 +283,7 @@
                              referencedTableName="log_subject" referencedColumnNames="id"
                              foreignKeyName="fk_lesson_subject" deleteCascade="true"/>
             </column>
-            <column name="status" type="varchar(30)" remarks="Признак урока"/>
-            <column name="title" type="varchar(1000)" remarks="Основная тема урока">
+            <column name="topic" type="varchar(1000)" remarks="Основная тема урока">
                 <constraints nullable="false" notNullConstraintName="nn_lesson_title"/>
             </column>
             <column name="sick_exercise" type="number" remarks="Задание для болеющих"/>
@@ -305,5 +313,33 @@
             </column>
         </createTable>
     </changeSet>
+
+    <changeSet id="2025.08.22.1245 lesson students" author="avmakarov">
+        <validCheckSum>ANY</validCheckSum>
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="log_lesson_student"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="log_lesson_student" remarks="Оценка ученика на занятии">
+            <column name="lesson_id" type="number">
+                <constraints primaryKey="true" referencedTableName="log_user"
+                             referencedColumnNames="id" foreignKeyName="lesson_student_lesson"
+                             deleteCascade="true"/>
+            </column>
+            <column name="student_id" type="number">
+                <constraints primaryKey="true" referencedTableName="log_student"
+                             referencedColumnNames="id" foreignKeyName="lesson_student_student"
+                             deleteCascade="true"/>
+            </column>
+            <column name="state" type="varchar(20)" remarks="Статус на уроке">
+                <constraints nullable="false" notNullConstraintName="nn_log_lesson_student"/>
+            </column>
+            <column name="grade" type="number" remarks="Оценка"/>
+            <column name="comment" type="varchar(1000)" remarks="Комментарий"/>
+        </createTable>
+    </changeSet>
+
 
 </databaseChangeLog>

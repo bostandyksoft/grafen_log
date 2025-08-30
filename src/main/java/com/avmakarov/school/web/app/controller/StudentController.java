@@ -3,10 +3,10 @@ package com.avmakarov.school.web.app.controller;
 import com.avmakarov.school.model.service.StudentService;
 import com.avmakarov.school.web.app.mapper.StudentMapper;
 import com.avmakarov.school.web.app.transport.StudentTO;
-import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class StudentController {
     public List<StudentTO> all() {
         return mapper.transportStudents(service.findAll());
     }
-
+/*
     @Transactional
     @PostMapping
     public StudentTO save(@Valid @RequestBody StudentTO transport) {
@@ -43,5 +43,5 @@ public class StudentController {
     public void delete(@RequestBody List<Long> ids) {
         service.removeAll(ids);
     }
-
+    */
 }

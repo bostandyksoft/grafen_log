@@ -56,7 +56,7 @@ Ext.apply(Log, {
                     success.apply(null, data)
                 }
             },
-            failure: function (response, opts) {
+            failure: function (response) {
                 Ext.toast({
                     html: 'Ошибка',
                     title: response.status

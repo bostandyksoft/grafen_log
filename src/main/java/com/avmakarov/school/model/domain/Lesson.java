@@ -5,14 +5,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "log_lesson")
 public class Lesson extends AbstractBaseEntity {
-
-    public enum LessonStatus {
-        SCHEDULED, IN_PROGRESS, COMPLETED, CANCELLED
-    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teacher_id")
@@ -30,14 +28,10 @@ public class Lesson extends AbstractBaseEntity {
     @JoinColumn(name = "subject_id", nullable = false)
     private Subject subject;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", length = 30)
-    private LessonStatus status;
-
     @NotBlank
     @Size(max = 1000)
-    @Column(name = "title", nullable = false)
-    private String title;
+    @Column(name = "topic", nullable = false)
+    private String topic;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sick_exercise")
@@ -50,6 +44,9 @@ public class Lesson extends AbstractBaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "control_exercise")
     private Exercise controlExercise;
+
+    @OneToMany(mappedBy = "id.lesson", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<LessonStudent> students = new ArrayList<>();
 
     public Lesson() {
     }
@@ -87,20 +84,12 @@ public class Lesson extends AbstractBaseEntity {
         this.subject = subject;
     }
 
-    public LessonStatus getStatus() {
-        return status;
+    public String getTopic() {
+        return topic;
     }
 
-    public void setStatus(LessonStatus status) {
-        this.status = status;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
+    public void setTopic(String topic) {
+        this.topic = topic;
     }
 
     public Exercise getSickExercise() {
@@ -127,13 +116,11 @@ public class Lesson extends AbstractBaseEntity {
         this.controlExercise = controlExercise;
     }
 
-    @Override
-    public String toString() {
-        return "Lesson{" +
-                "id=" + id +
-                ", date=" + date +
-                ", status=" + status +
-                ", title='" + title + '\'' +
-                '}';
+    public List<LessonStudent> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<LessonStudent> students) {
+        this.students = students;
     }
 }

@@ -37,4 +37,10 @@ public class NotFoundException extends HandledException {
             super("Не найден пользователь с id " + oid);
         }
     }
+
+    public static class Lesson extends NotFoundException {
+        public Lesson(Long oid) {
+            super("Не найден урок с id " + oid);
+        }
+    }
 }

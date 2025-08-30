@@ -1,10 +1,11 @@
 package com.avmakarov.school.model.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "log_class")
@@ -14,6 +15,9 @@ public class SchoolClass extends AbstractBaseEntity {
     @Size(max = 100)
     @Column(name = "name", nullable = false, unique = true)
     private String name;
+
+    @OneToMany(mappedBy = "schoolClass", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Student> students = new ArrayList<>();
 
     public SchoolClass() {
     }
@@ -30,11 +34,11 @@ public class SchoolClass extends AbstractBaseEntity {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return "SchoolClass{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<Student> students) {
+        this.students = students;
     }
 }

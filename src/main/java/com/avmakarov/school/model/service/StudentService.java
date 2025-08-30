@@ -1,6 +1,7 @@
 package com.avmakarov.school.model.service;
 
 import com.avmakarov.school.exceptions.NotFoundException;
+import com.avmakarov.school.model.domain.SchoolClass;
 import com.avmakarov.school.model.domain.Student;
 import com.avmakarov.school.model.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +41,9 @@ public class StudentService {
 
     public void removeAll(List<Long> ids) {
         repository.deleteAllById(ids);
+    }
+
+    public List<Student> findAllByClass(SchoolClass schoolClass) {
+        return repository.findAllBySchoolClass(schoolClass);
     }
 }

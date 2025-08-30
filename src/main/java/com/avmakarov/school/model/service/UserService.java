@@ -5,6 +5,8 @@ import com.avmakarov.school.model.domain.User;
 import com.avmakarov.school.model.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +42,7 @@ public class UserService {
     }
 
     public User findOne(Long oid) {
-        return userRepository.findById(oid).orElseThrow(()->new NotFoundException.User(oid));
+        return userRepository.findById(oid).orElseThrow(() -> new NotFoundException.User(oid));
     }
 
     public Iterable<User> findAll() {
@@ -49,5 +51,10 @@ public class UserService {
 
     public void deleteAll(List<Long> ids) {
         userRepository.deleteAllById(ids);
+    }
+
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return findByLogin(authentication.getName()).orElseThrow(() -> new IllegalStateException("There is no user " + authentication.getName()));
     }
 }

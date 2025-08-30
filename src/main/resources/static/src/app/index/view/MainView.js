@@ -4,6 +4,7 @@ Ext.define('Index.view.MainView', {
         'Index.view.LessonsGrid',
         'Index.view.CRUDGrid',
         'Index.view.UsersGrid',
+        'Index.view.ClassGrid',
         'Log.base.Object',
         'Log.base.SchoolClass',
         'Log.base.Student',
@@ -50,9 +51,8 @@ Ext.define('Index.view.MainView', {
         }
         if (context.canEditClasses) {
             me.add({
-                xtype: 'crud',
-                title: 'Классы',
-                object: Log.base.Object.get('Log.base.SchoolClass')
+                xtype: 'classes',
+                title: 'Классы'
             })
         }
         if (context.canEditTeachers) {

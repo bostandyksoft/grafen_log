@@ -24,8 +24,16 @@ public class ClassController {
     }
 
     @GetMapping("/all")
-    public List<ClassTO> all() {
+    public List<ClassTO.Table> all() {
         return classMapper.list(classService.findAll());
+    }
+
+    @Transactional
+    @GetMapping
+    public ClassTO load(@RequestParam("id") Long id) {
+        return classMapper.transportClass(
+                classService.findOne(id)
+        );
     }
 
     @Transactional
@@ -33,7 +41,7 @@ public class ClassController {
     public  ClassTO save(@Valid @RequestBody ClassTO classTO) {
         return classMapper.transportClass(
                 classService.save(
-                        classMapper.domain(classService, classTO)
+                        classMapper.domain(classTO)
                 )
         );
     }

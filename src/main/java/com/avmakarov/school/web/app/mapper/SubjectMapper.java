@@ -4,11 +4,15 @@ import com.avmakarov.school.model.domain.Subject;
 import com.avmakarov.school.model.service.SubjectService;
 import com.avmakarov.school.web.app.transport.SubjectTO;
 import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 @Mapper
 public abstract class SubjectMapper {
+
+    @Autowired
+    private SubjectService subjectService;
 
     @Named("transportSubject")
     @Mapping(target = "oid", source = "id")
@@ -36,4 +40,8 @@ public abstract class SubjectMapper {
     @Mapping(target = "comment")
     protected abstract void domain(SubjectTO transport, @MappingTarget Subject domain);
 
+    @Named("findSubject")
+    protected Subject findSubject(Long id) {
+        return subjectService.findOne(id);
+    }
 }
